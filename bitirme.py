@@ -16,21 +16,21 @@ cargo_data = pd.read_csv("https://drive.usercontent.google.com/download?id=1Tc5D
 
 # Ana sayfa
 def main():
-    st.title("İlgili Ay Tahmin Verileri")
+    st.title("Forecast Data in Current Month")
     selected_city, selected_district = get_user_selection()
     if selected_district:
         display_results( selected_city, selected_district)
 
 # Kullanıcı seçimlerini al
 def get_user_selection():
-    selected_city = st.sidebar.selectbox("İl Seçin", ["İstanbul"])  
+    selected_city = st.sidebar.selectbox("Select City", ["İstanbul"])  
     #selected_city = st.sidebar.selectbox("İl Seçin", cargo_data["City"].drop_duplicates().tolist())
-    selected_district = st.sidebar.selectbox("İlçe Seçin", cargo_data[cargo_data["City"]==selected_city]["State"].drop_duplicates().tolist())
+    selected_district = st.sidebar.selectbox("Select District", cargo_data[cargo_data["City"]==selected_city]["State"].drop_duplicates().tolist())
     return  selected_city, selected_district
 
 # Sonuçları görüntüle
 def display_results( selected_city, selected_district):
-    current_month = datetime.now().month -1 
+    current_month = datetime.now().month -2 
     current_date = datetime(2024,2,5)
     #st.subheader(f"Seçilen İl: {selected_city}, Seçilen İlçe: {selected_district}")
     df_filter = cargo_data[(cargo_data["City"]==selected_city) & (cargo_data["State"]==selected_district)]
@@ -48,11 +48,11 @@ def display_results( selected_city, selected_district):
         #fig, ax = plt.subplots(figsize=(4, 4)) 
         #ax.plot(df)
         #st.pyplot(fig)
-        st.text("İlgili ayda gerekli araç sayısı \n{}".format(round(df["NumberOfCargo"].mean()/20)))
+        st.text("The number of suggested vehicle in current month: \n{}".format(round(df["NumberOfCargo"].mean()/20)))
         # Metni ortaya hizala
         #st.markdown('<div style="text-align:center">Bu metin ortaya hizalanmıştır.</div>', unsafe_allow_html=True)
         
-        st.text("İlgili ayda gerekli kurye sayısı \n{}".format(round((df["NumberOfCargo"].median()/20)+2)))
+        st.text("The type of suggested vehicles in current month: \n{}".format("Small Vehicle: {} \n Big Vehicle: {}".format(round(df["NumberOfCargo"].mean()/20)/3,round(df["NumberOfCargo"].mean()/20)*2/3)))
 
         
 
